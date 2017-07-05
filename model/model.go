@@ -42,7 +42,8 @@ func genModelFile(db *sqlx.DB, render *template.Template, dbName, dbConnection, 
 		DBConnection: dbConnection,
 		TableName:    tableName,
 		ModelName:    tableName,
-		TableSchema:  tableSchema}
+		TableSchema:  tableSchema,
+	}
 
 	if err := render.Execute(f, model); err != nil {
 		log.Fatal(err)
