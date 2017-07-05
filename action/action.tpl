@@ -115,7 +115,9 @@ func (*{{$exportModelName}}) List(args *paginator.Paginator, reply *paginator.Pa
 	} else {
 		qs = qs.OrderBy("-id")
 	}
-	qs = qs.Limit(args.PageSize, start)
+	if (args.PageSize != 0) {
+    		qs = qs.Limit(args.PageSize, start)
+    }
 	_, err := qs.Values(&reply.List)
 	return err
 }
