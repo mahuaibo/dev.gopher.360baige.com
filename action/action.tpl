@@ -5,14 +5,17 @@ import (
 	"github.com/astaxie/beego/orm"
 	"dev.model.360baige.com/models/{{.PackageName}}"
 	"dev.model.360baige.com/models/paginator"
-    "dev.model.360baige.com/models/batch"
+	"dev.model.360baige.com/models/batch"
+	"strings"
+	"encoding/json"
+	"time"
 )
 
 type {{$exportModelName}}Action struct {
 }
 
 // 新增
-func (*{{$exportModelName}}) Add(args *{{.PackageName}}.{{$exportModelName}}, reply *{{.PackageName}}.{{$exportModelName}}) error {
+func (*{{$exportModelName}}Action) Add(args *{{.PackageName}}.{{$exportModelName}}, reply *{{.PackageName}}.{{$exportModelName}}) error {
 	o := orm.NewOrm()
 	o.Using("{{.PackageName}}")
 	id, err := o.Insert(args)
@@ -24,7 +27,7 @@ func (*{{$exportModelName}}) Add(args *{{.PackageName}}.{{$exportModelName}}, re
 }
 
 // 查询 by Id
-func (*{{$exportModelName}}) FindById(args *{{.PackageName}}.{{$exportModelName}}, reply *{{.PackageName}}.{{$exportModelName}}) error {
+func (*{{$exportModelName}}Action) FindById(args *{{.PackageName}}.{{$exportModelName}}, reply *{{.PackageName}}.{{$exportModelName}}) error {
 	o := orm.NewOrm()
 	o.Using("{{.PackageName}}")
 	reply.Id = args.Id
@@ -33,7 +36,7 @@ func (*{{$exportModelName}}) FindById(args *{{.PackageName}}.{{$exportModelName}
 }
 
 // 更新 by Id
-func (*{{$exportModelName}}) UpdateById(args *{{.PackageName}}.{{$exportModelName}}, reply *{{.PackageName}}.{{$exportModelName}}) error {
+func (*{{$exportModelName}}Action) UpdateById(args *{{.PackageName}}.{{$exportModelName}}, reply *{{.PackageName}}.{{$exportModelName}}) error {
 	o := orm.NewOrm()
 	o.Using("{{.PackageName}}")
 	num, err := o.Update(args)
@@ -46,7 +49,7 @@ func (*{{$exportModelName}}) UpdateById(args *{{.PackageName}}.{{$exportModelNam
 }
 
 // 1. AddMultiple 增加多个
-func (*{{$exportModelName}}) AddMultiple(args []*{{.PackageName}}.{{$exportModelName}}, reply *batch.BackNumm) error {
+func (*{{$exportModelName}}Action) AddMultiple(args []*{{.PackageName}}.{{$exportModelName}}, reply *batch.BackNumm) error {
 	o := orm.NewOrm()
 	o.Using("{{.PackageName}}") //查询数据库
 	num, err := o.InsertMulti(100, args)
@@ -55,7 +58,7 @@ func (*{{$exportModelName}}) AddMultiple(args []*{{.PackageName}}.{{$exportModel
 }
 
 // 2.UpdateByIds 修改多个,默认更改状态为-1，只适合id,更改status,update_time
-func (*{{$exportModelName}}) UpdateByIds(args *batch.BatchModify, reply *batch.BackNumm) error {
+func (*{{$exportModelName}}Action) UpdateByIds(args *batch.BatchModify, reply *batch.BackNumm) error {
 	o := orm.NewOrm()
 	o.Using("{{.PackageName}}")            //查询数据库
 	qs := o.QueryTable("{{.PackageName}}") //查询表名
@@ -76,7 +79,7 @@ func (*{{$exportModelName}}) UpdateByIds(args *batch.BatchModify, reply *batch.B
 }
 
 // 3.查询List （按ID, 按页码）
-func (*{{$exportModelName}}) List(args *paginator.Paginator, reply *paginator.Paginator) error {
+func (*{{$exportModelName}}Action) List(args *paginator.Paginator, reply *paginator.Paginator) error {
 	o := orm.NewOrm()
 	o.Using("{{.PackageName}}")            //查询数据库
 	qs := o.QueryTable("{{.PackageName}}") //查询表名
@@ -116,8 +119,8 @@ func (*{{$exportModelName}}) List(args *paginator.Paginator, reply *paginator.Pa
 		qs = qs.OrderBy("-id")
 	}
 	if (args.PageSize != 0) {
-    		qs = qs.Limit(args.PageSize, start)
-    }
+		qs = qs.Limit(args.PageSize, start)
+	}
 	_, err := qs.Values(&reply.List)
 	return err
 }

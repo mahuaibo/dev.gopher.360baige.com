@@ -19,14 +19,14 @@ func genModelFile(db *sqlx.DB, render *template.Template, dbName, dbConnection, 
 	tableSchema := &[]tool.TABLE_SCHEMA{}
 	err := db.Select(tableSchema,
 		"SELECT COLUMN_NAME, DATA_TYPE,COLUMN_KEY,COLUMN_COMMENT from COLUMNS where "+
-			"TABLE_NAME"+"='"+tableName+"' and "+"table_schema = '" + *dbNameEx + dbName+"'")
+			"TABLE_NAME"+ "='"+ tableName+ "' and "+ "table_schema = '" + *dbNameEx+ dbName+ "'")
 
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	fileName := *modelFolder + dbName +"/"+ strings.ToLower(tableName) + ".go"
+	fileName := *modelFolder + dbName + "/" + strings.ToLower(tableName) + ".go"
 
 	os.Remove(fileName)
 	f, err := os.Create(fileName)
@@ -54,7 +54,7 @@ func genModelFile(db *sqlx.DB, render *template.Template, dbName, dbConnection, 
 }
 
 var tplFile = flag.String("tplFile", "./action.tpl", "the path of tpl file")
-var modelFolder = flag.String("modelFolder", "../../dev.rpc.360baige.com/actions/", "the path for folder of model files")
+var modelFolder = flag.String("modelFolder", "../../dev.action.360baige.com/actions/", "the path for folder of model files")
 
 var dbInstanceName = flag.String("dbInstanceName", "db.DB", "the name of db instance used in model files")
 var dbIP = flag.String("dbIP", "182.92.163.192", "the ip of db host")
@@ -95,7 +95,7 @@ func main() {
 	var tablaNames []string
 	sysDB := db.GetDB(*dbIP, *dbPort, "information_schema", *userName, *pwd)
 	err = sysDB.Select(&tablaNames,
-		"SELECT table_name from tables where table_schema = '"+ *dbNameEx +*dbName+"'")
+		"SELECT table_name from tables where table_schema = '" + *dbNameEx + *dbName+"'")
 	if err != nil {
 		fmt.Println(err)
 	}
