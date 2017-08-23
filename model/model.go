@@ -19,14 +19,14 @@ func genModelFile(db *sqlx.DB, render *template.Template, dbName, dbConnection, 
 	tableSchema := &[]tool.TABLE_SCHEMA{}
 	err := db.Select(tableSchema,
 		"SELECT COLUMN_NAME, DATA_TYPE,COLUMN_KEY,COLUMN_COMMENT from COLUMNS where "+
-			"TABLE_NAME"+"='"+tableName+"' and "+"table_schema = '" + *dbNameEx + dbName+"'")
+			"TABLE_NAME"+ "='"+ tableName+ "' and "+ "table_schema = '" + *dbNameEx+ dbName+ "'")
 
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	fileName := *modelFolder + dbName +"/"+ strings.ToLower(tableName) + ".go"
+	fileName := *modelFolder + dbName + "/" + strings.ToLower(tableName) + ".go"
 
 	os.Remove(fileName)
 	f, err := os.Create(fileName)
@@ -85,6 +85,7 @@ func main() {
 		"FirstCharUpper":       tool.FirstCharUpper,
 		"TypeConvert":          tool.TypeConvert,
 		"Tags":                 tool.Tags,
+		"Tags2":                tool.Tags2,
 		"ExportColumn":         tool.ExportColumn,
 		"Join":                 tool.Join,
 		"MakeQuestionMarkList": tool.MakeQuestionMarkList,
@@ -96,7 +97,7 @@ func main() {
 	var tablaNames []string
 	sysDB := db.GetDB(*dbIP, *dbPort, "information_schema", *userName, *pwd)
 	err = sysDB.Select(&tablaNames,
-		"SELECT table_name from tables where table_schema = '"+ *dbNameEx +*dbName+"'")
+		"SELECT table_name from tables where table_schema = '" + *dbNameEx + *dbName+"'")
 	if err != nil {
 		fmt.Println(err)
 	}

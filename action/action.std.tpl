@@ -83,7 +83,11 @@ func (*{{$exportModelName}}Action) FindByCond(args *action.FindByCond, reply *{{
 	cond := utils.ConvertCond(args.CondList)
 
 	err := o.QueryTable("{{.TableName}}").SetCond(cond).One(reply, args.Fileds...)
-	return err
+	if err == orm.ErrNoRows {
+		return nil
+	} else {
+		return err
+	}
 }
 
 // 8

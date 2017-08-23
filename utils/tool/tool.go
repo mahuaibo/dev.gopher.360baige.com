@@ -94,6 +94,22 @@ func FirstCharUpper(str string) string {
 	}
 }
 
+func Tags2(columnName string) template.HTML {
+
+	return template.HTML("`db:" + `"` + columnName + `"` +
+		" json:" + `"` + tags2Column(columnName) + "\"`")
+}
+
+func tags2Column(columnName string) string {
+	columnItems := strings.Split(columnName, "_")
+	for i := 0; i < len(columnItems); i++ {
+		if i > 0 {
+			columnItems[i] = strings.Title(columnItems[i])
+		}
+	}
+	return strings.Join(columnItems, "")
+}
+
 func Tags(columnName string) template.HTML {
 
 	return template.HTML("`db:" + `"` + columnName + `"` +
